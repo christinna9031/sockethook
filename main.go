@@ -2,16 +2,17 @@ package main
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/gorilla/websocket"
-	log "github.com/sirupsen/logrus"
+	"io/ioutil"
 	"net/http"
 	"strings"
-	"crypto/hmac"
-	"crypto/sha256"
-	"io/ioutil"
+
+	"github.com/gorilla/websocket"
+	log "github.com/sirupsen/logrus"
 )
 
 // Map holding all Websocket clients and the endpoints they are subscribed to
@@ -104,30 +105,29 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	//origin := r.Header.Get("Origin")
 	twitchMessageId := r.Header.Get("Twitch-Eventsub-Message-Id")
 	if twitchMessageId != "" {
-	twitchMessageTimeStamp := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
-	//twitchBody := new(bytes.Buffer)
-	//twitchBody.ReadFrom(r.Body)
-	//twitchData := twitchBody.Bytes()
+		twitchMessageTimeStamp := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
+		//twitchBody := new(bytes.Buffer)
+		//twitchBody.ReadFrom(r.Body)
+		//twitchData := twitchBody.Bytes()
 
-	fmt.Println (twitchMessageId)
-	fmt.Println (twitchMessageTimeStamp)
-	//fmt.Println (twitchBody)
-	twitchBody := ioutil.ReadAll(r.Body)
+		fmt.Println(twitchMessageId)
+		fmt.Println(twitchMessageTimeStamp)
+		//fmt.Println (twitchBody)
+		twitchBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Printf("Error reading body: %v", err)
+			return
+		}
 
+		signature := []byte(twitchMessageId + twitchMessageTimeStamp)
+		secret := []byte("testhello123")
+		valid := ValidMAC(signature, twitchBody, secret)
 
-	signature :=  []byte(twitchMessageId+twitchMessageTimeStamp)
-	secret := []byte("testhello123")
-	valid := ValidMAC(signature, twitchBody, secret)
+		fmt.Println(valid)
+		//if valid {fmt.Printf("Valid HMAC? %t\n")}
+	}
+	log.Print(r)
 
-
-
-	
-	fmt.Println (valid)
-	//if valid {fmt.Printf("Valid HMAC? %t\n")}
-}
-	log.Print (r)
-
-	
 }
 
 func ValidMAC(message, messageMAC, key []byte) bool {
