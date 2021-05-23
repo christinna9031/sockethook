@@ -65,6 +65,19 @@ func handleHook(w http.ResponseWriter, r *http.Request, endpoint string) {
 
 	clients[endpoint] = conns
 
+	twitchMessageType := r.Header.Get("Twitch-Eventsub-Message-Type")
+
+	if twitchMessageType == "webhook_callback_verification" {
+
+		fmt.Println(msg.Data)
+		//w.Write((msg.Data))
+
+
+
+	//fmt.Println("response Body:", string(msg.Data))
+
+	}
+
 	logEntry.WithField("clients", len(conns)).Infoln("Hook broadcasted")
 }
 
@@ -104,29 +117,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	//origin := r.Header.Get("Origin")
 	twitchMessageId := r.Header.Get("Twitch-Eventsub-Message-Id")
-	twitchMessageType := r.Header.Get("Twitch-Eventsub-Message-Type")
 
-	if twitchMessageType == "webhook_callback_verification" {
-
-		type challenge struct {
-			challenge string
-		  }
-
-		var p challenge
-		err := json.NewDecoder(r.Body).Decode(&p)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		fmt.Fprintf(w, "Challenge: %+v", p)
-		w.Write([]byte(p.challenge))
-
-
-
-	//fmt.Println("response Body:", string(msg.Data))
-
-	}
 
 	if twitchMessageId != "" {
 		twitchTimeStamp := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
