@@ -93,21 +93,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		handleHook(w, r, strings.TrimPrefix(path, "/hook"))
 	} else if strings.HasPrefix(path, "/socket") {
 		handleClient(w, r, strings.TrimPrefix(path, "/socket"))
-	} 
-	else {
+	} else {
 		log.WithField("path", r.URL.Path).Warnln("404 Not found")
 		w.WriteHeader(404)
-
 	}
-
+	
 	log.Print (r.Header)
 	
 	if r.Method.Contains ("GET") {
 		log.Print("The method here is GET")
 	}
 	
-
-
 }
 
 func main() {
@@ -122,46 +118,4 @@ func main() {
 	// Start HTTP server
 	log.Infof("Sockethook is ready and listening at port %d ✅", *port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", *address, *port), nil))
-}
-
-func handleTwitch(w http.ResponseWriter, r *http.Request, endpoint string) {
-	msg := Message{}
-	logEntry := log.WithField("endpoint", endpoint)
-
-	// Transfer headers to response
-	msg.Headers = make(map[string]string)
-	for k, v := range r.Header {
-		msg.Headers[k] = v[0]
-	}
-
-	// Set endpoint on response
-	msg.Endpoint = endpoint
-
-	// Read body of request
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r.Body)
-
-	// If request is JSON, unmarshal and save to response. Otherwise just save as string.
-	if r.Header.Get("Content-Type") == "application/json" {
-		json.Unmarshal(buf.Bytes(), &msg.Data)
-	} else {
-		msg.Data = buf.Bytes()
-	}
-
-	// Get all clients listening to the current endpoint
-	conns := clients[endpoint]
-
-	if conns != nil {
-		for i, conn := range conns {
-			if conn.WriteJSON(msg) != nil {
-				// Remove client and close connection if sending failed
-				conns = append(conns[:i], conns[i+1:]...)
-				conn.Close()
-			}
-		}
-	}
-
-	clients[endpoint] = conns
-
-	logEntry.WithField("clients", len(conns)).Infoln("Hook broadcasted")
 }
