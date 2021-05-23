@@ -117,8 +117,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	valid := hmac.Validate(twitchData, signature, secret)
 
 	
-
-	if valid {fmt.Printf("Valid HMAC? %t\n")}
+	fmt.Println (valid)
+	//if valid {fmt.Printf("Valid HMAC? %t\n")}
 }
 	log.Print (r)
 
