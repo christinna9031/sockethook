@@ -104,9 +104,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	twitchMessageId := r.Header.Get("Twitch-Eventsub-Message-Id")
 	if twitchMessageId != "" {
 	twitchMessageTimeStamp := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
-	twitchBody := new(bytes.Buffer)
-	twitchBody.ReadFrom(r.Body)
-	twitchData := twitchBody.Bytes()
+	//twitchBody := new(bytes.Buffer)
+	//twitchBody.ReadFrom(r.Body)
+	//twitchData := twitchBody.Bytes()
 
 	fmt.Println (twitchMessageId)
 	fmt.Println (twitchMessageTimeStamp)
@@ -114,7 +114,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	signature :=  []byte(twitchMessageId+twitchMessageTimeStamp)
 	secret := []byte("testhello123")
-	valid := ValidMAC(signature, twitchData, secret)
+	valid := ValidMAC(signature, r.Body, secret)
 
 
 
