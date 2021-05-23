@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	//"io/ioutil"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -127,17 +127,20 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		//twitchMessage := append([]byte(twitchMessageId), []byte(twitchTimeStamp)...)
 		//twitchMessageX := append(twitchMessage, twitchBody...)
 
-		newBody := new(bytes.Buffer)
-		newBody.ReadFrom(r.Body)
-		twitchMessage := newBody.Bytes()
-		twitchMessageX := twitchMessageId + twitchTimeStamp + string(twitchMessage)
-		twitchMessageY := []byte(twitchMessageX)
+	    responseData, err := ioutil.ReadAll(r.Body)
+    if err != nil {
+        log.Fatal(err)
+    }
+		//twitchBody := newBody.Bytes()
+		
+		twitchMessageX := append ([]byte(twitchMessageId), []byte(twitchTimeStamp)...)
+		twitchMessage :=  append (twitchMessageX, responseData...)
 
 		signature := []byte(twitchSignature)
 		secret := []byte("testhello123")
-		valid := ValidMAC(signature, twitchMessageY, secret)
+		valid := ValidMAC(twitchMessage, signature, secret)
 
-		fmt.Println(twitchMessageId)
+		fmt.Println(twitchMessage)
 		fmt.Println(signature)
 		fmt.Println(secret)
 
