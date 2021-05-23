@@ -11,7 +11,6 @@ import (
 	"strings"
 	"crypto/hmac"
 	"crypto/sha256"
-	"encoding/hex"
 )
 
 // Map holding all Websocket clients and the endpoints they are subscribed to
