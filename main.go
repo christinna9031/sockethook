@@ -111,7 +111,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println (twitchMessageId)
 	fmt.Println (twitchMessageTimeStamp)
 	//fmt.Println (twitchBody)
-	twitchBody := []byte(r.Body)
+	twitchBody := ioutil.ReadAll(r.Body)
 
 
 	signature :=  []byte(twitchMessageId+twitchMessageTimeStamp)
