@@ -97,6 +97,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.WithField("path", r.URL.Path).Warnln("404 Not found")
 		w.WriteHeader(404)
 	}
+	log.Print(w)
+	log.Print(r)
 }
 
 func main() {
