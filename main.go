@@ -110,7 +110,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println (twitchMessageId)
 	fmt.Println (twitchMessageTimeStamp)
-	fmt.Println (twitchBody)
+	//fmt.Println (twitchBody)
+	twitchBody := []byte(r.Body)
+
 
 	signature :=  []byte(twitchMessageId+twitchMessageTimeStamp)
 	secret := []byte("testhello123")
