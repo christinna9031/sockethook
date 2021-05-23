@@ -1,5 +1,5 @@
 {
   "name": "Sockethook",
   "description": "Webhook-to-WebSocket proxy",
-  "repository": "https://github.com/christinna9031/sockethook",
+  "repository": "https://github.com/christinna9031/sockethook"
 }
