@@ -100,10 +100,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	
 	log.Print (r.Header)
 	
-	if r.Method.Contains ("GET") {
-		log.Print("The method here is GET")
-	}
-	
 }
 
 func main() {
