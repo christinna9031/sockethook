@@ -9,7 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
-	"github.com/christinna9031/hmac"
+	"crypto/hmac"
 )
 
 // Map holding all Websocket clients and the endpoints they are subscribed to
@@ -103,7 +103,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	twitchMessageId := r.Header.Get("Twitch-Eventsub-Message-Id")
 	if twitchMessageId != "" {
 	twitchMessageTimeStamp := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
-	
 	twitchBody := new(bytes.Buffer)
 	twitchBody.ReadFrom(r.Body)
 	twitchData := twitchBody.Bytes()
@@ -114,7 +113,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	signature := twitchMessageId+twitchMessageTimeStamp
 	secret := "testhello123"
-	valid := hmac.Validate(twitchData, signature, secret)
+	valid := ValidMAC(signature, twitchData, secret)
+
+
 
 	
 	fmt.Println (valid)
@@ -123,6 +124,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	log.Print (r)
 
 	
+}
+
+func ValidMAC(message, messageMAC, key []byte) bool {
+	mac := hmac.New(sha256.New, key)
+	mac.Write(message)
+	expectedMAC := mac.Sum(nil)
+	return hmac.Equal(messageMAC, expectedMAC)
 }
 
 func main() {
