@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"strings"
 	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 )
 
 // Map holding all Websocket clients and the endpoints they are subscribed to
@@ -111,8 +113,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println (twitchMessageTimeStamp)
 	fmt.Println (twitchBody)
 
-	signature := twitchMessageId+twitchMessageTimeStamp
-	secret := "testhello123"
+	signature :=  []byte(twitchMessageId+twitchMessageTimeStamp)
+	secret := []byte("testhello123")
 	valid := ValidMAC(signature, twitchData, secret)
 
 
