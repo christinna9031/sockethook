@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	//"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -114,21 +114,28 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		//twitchData := twitchBody.Bytes()
 
 		//fmt.Println (twitchBody)
-		twitchBody, err := ioutil.ReadAll(r.Body)
+		/*twitchBody, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Printf("Error reading body: %v", err)
 			return
-		}
+		}*/
 
 		/*twitchbody := new(bytes.Buffer)
 		twitchbody.ReadFrom(r.Body)*/
 
 		// twitchMessage := []byte(twitchMessageId)+[]byte(twitchTimeStamp)+twitchBody
-		twitchMessage := append([]byte(twitchMessageId), []byte(twitchTimeStamp)...)
-		twitchMessageX := append(twitchMessage, twitchBody...)
+		//twitchMessage := append([]byte(twitchMessageId), []byte(twitchTimeStamp)...)
+		//twitchMessageX := append(twitchMessage, twitchBody...)
+
+		newBody := new(bytes.Buffer)
+		newBody.ReadFrom(r.Body)
+		twitchMessage := newBody.Bytes()
+		twitchMessageX := twitchMessageId + twitchTimeStamp + string(twitchMessage)
+		twitchMessageY := []byte(twitchMessageX)
+
 		signature := []byte(twitchSignature)
 		secret := []byte("testhello123")
-		valid := ValidMAC(signature, twitchMessageX, secret)
+		valid := ValidMAC(signature, twitchMessageY, secret)
 
 		fmt.Println(twitchMessageId)
 		fmt.Println(signature)
