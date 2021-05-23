@@ -69,12 +69,17 @@ func handleHook(w http.ResponseWriter, r *http.Request, endpoint string) {
 
 	if twitchMessageType == "webhook_callback_verification" {
 
-		fmt.Println(msg.Data)
+	//	fmt.Println(msg.Data)
+
+		body := msg.Data
+
+
+
 		//w.Write((msg.Data))
 
 
 
-	//fmt.Println("response Body:", string(msg.Data))
+	fmt.Println(body.(map[string]interface{})["challenge"])
 
 	}
 
@@ -154,10 +159,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		signature := []byte(twitchSignature)
 		secret := []byte("testhello123")
 		valid := ValidMAC(twitchMessage, signature, secret)
-
-		fmt.Println(twitchMessage)
-		fmt.Println(signature)
-		fmt.Println(secret)
 
 		fmt.Println(valid)
 		//if valid {fmt.Printf("Valid HMAC? %t\n")}
