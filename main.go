@@ -78,7 +78,7 @@ func handleHook(w http.ResponseWriter, r *http.Request, endpoint string) {
 
 	challenge := body.(map[string]interface{})["challenge"]
 
-	fmt.Println(challenge)
+	//fmt.Println(challenge)
 	str := fmt.Sprint(challenge)
 	w.Write([]byte(str))
 
@@ -127,27 +127,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	if twitchMessageId != "" {
 		twitchTimeStamp := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
-		twitchSignature := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
-
-		// 2ccc3407-8f4b-40e6-9681-0059d87221932021-05-23T07:03:42.885277459Z6481a80f-d5da-4a1b-952b-ef16f29ef2b4
-		//twitchBody := new(bytes.Buffer)
-		//twitchBody.ReadFrom(r.Body)
-		//twitchData := twitchBody.Bytes()
-
-		//fmt.Println (twitchBody)
-		/*twitchBody, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			log.Printf("Error reading body: %v", err)
-			return
-		}*/
-
-		/*twitchbody := new(bytes.Buffer)
-		twitchbody.ReadFrom(r.Body)*/
-
-		// twitchMessage := []byte(twitchMessageId)+[]byte(twitchTimeStamp)+twitchBody
-		//twitchMessage := append([]byte(twitchMessageId), []byte(twitchTimeStamp)...)
-		//twitchMessageX := append(twitchMessage, twitchBody...)
-
+		twitchSignature := r.Header.Get("Twitch-Eventsub-Message-Signature")
 	    responseData, err := ioutil.ReadAll(r.Body)
     if err != nil {
         log.Fatal(err)
