@@ -98,10 +98,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(404)
 	}
 
-
+	origin := r.Header.Get("Origin")
+	host := r.Header.Get("Host")
+	fmt.Println (origin)
+	fmt.Println (host)
 	log.Print (r)
-	log.Print (r.Header.Get("Origin"))
-	log.Print (r.Header.Get("Host"))
+
 	
 }
 
