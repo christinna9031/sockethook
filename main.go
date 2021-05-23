@@ -107,14 +107,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if twitchMessageId != "" {
 		twitchTimeStamp := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
 		twitchSignature := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
-		
 
 		// 2ccc3407-8f4b-40e6-9681-0059d87221932021-05-23T07:03:42.885277459Z6481a80f-d5da-4a1b-952b-ef16f29ef2b4
 		//twitchBody := new(bytes.Buffer)
 		//twitchBody.ReadFrom(r.Body)
 		//twitchData := twitchBody.Bytes()
 
-		
 		//fmt.Println (twitchBody)
 		twitchBody, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -122,16 +120,19 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		
-
-
 		/*twitchbody := new(bytes.Buffer)
 		twitchbody.ReadFrom(r.Body)*/
 
-		twitchMessage := []byte(twitchMessageId+twitchTimeStamp+string(twitchBody))
+		// twitchMessage := []byte(twitchMessageId)+[]byte(twitchTimeStamp)+twitchBody
+		twitchMessage := append([]byte(twitchMessageId), []byte(twitchTimeStamp)...)
+		twitchMessageX := append(twitchMessage, twitchBody...)
 		signature := []byte(twitchSignature)
 		secret := []byte("testhello123")
-		valid := ValidMAC(signature, twitchMessage, secret)
+		valid := ValidMAC(signature, twitchMessageX, secret)
+
+		fmt.Println(twitchMessageId)
+		fmt.Println(signature)
+		fmt.Println(secret)
 
 		fmt.Println(valid)
 		//if valid {fmt.Printf("Valid HMAC? %t\n")}
