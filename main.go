@@ -98,9 +98,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(404)
 	}
 
-	origin := r.Header.Get("Origin")
-	host := r.Header.Get("Host")
-	fmt.Println (origin)
+	//origin := r.Header.Get("Origin")
+	host := r.Host
 	fmt.Println (host)
 	log.Print (r)
 
