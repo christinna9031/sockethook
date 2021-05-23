@@ -116,7 +116,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	signature :=  []byte(twitchMessageId+twitchMessageTimeStamp)
 	secret := []byte("testhello123")
-	valid := ValidMAC(signature, r.Body, secret)
+	valid := ValidMAC(signature, twitchBody, secret)
 
 
 
