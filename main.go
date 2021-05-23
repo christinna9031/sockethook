@@ -9,6 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
+	"github.com/alexellis/hmac"
 )
 
 // Map holding all Websocket clients and the endpoints they are subscribed to
@@ -99,8 +100,24 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//origin := r.Header.Get("Origin")
-	host := r.Host
-	fmt.Println (host)
+	twitchMessageId := r.Header.Get("Twitch-Eventsub-Message-Id")
+	if twitchMessageId {
+	twitchMessageTimeStamp := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
+	
+	twitchBody := new(bytes.Buffer)
+	twitchBody.ReadFrom(r.Body)
+	twitchBody.Bytes()
+
+	fmt.Println (twitchMessageId)
+	fmt.Println (twitchMessageTimeStamp)
+	fmt.Println (twitchBody)
+
+	signature := twitchMessageId+twitchMessageTimeStamp
+	secret := "testhello123"
+	valid := hmac.Validate(twitchBody, signature, secret)
+
+	fmt.Printf("Valid HMAC? %t\n")
+}
 	log.Print (r)
 
 	
