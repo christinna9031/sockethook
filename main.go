@@ -9,7 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
-	"github.com/alexellis/hmac"
+	"github.com/christinna9031/hmac"
 )
 
 // Map holding all Websocket clients and the endpoints they are subscribed to
