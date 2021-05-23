@@ -75,11 +75,12 @@ func handleHook(w http.ResponseWriter, r *http.Request, endpoint string) {
 
 
 
-		//w.Write((msg.Data))
 
+	challenge := body.(map[string]interface{})["challenge"]
 
-
-	fmt.Println(body.(map[string]interface{})["challenge"])
+	fmt.Println(challenge)
+	str := fmt.Sprint(challenge)
+	w.Write([]byte(str))
 
 	}
 
