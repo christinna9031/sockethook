@@ -102,8 +102,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	 * 	/hook is used for webhooks and requests will be broadcasted to all listening clients.
 	 * 	/socket is used for connect a new socket client
 	 */
-	if strings.HasPrefix(path, "/2OkTdBcFs0CQ6qQDIn7Wkg") {
-		handleHook(w, r, strings.TrimPrefix(path, "/2OkTdBcFs0CQ6qQDIn7Wkg"))
+	if strings.HasPrefix(path, "/hook") {
+		handleHook(w, r, strings.TrimPrefix(path, "/hook"))
 	} else if strings.HasPrefix(path, "/socket") {
 		handleClient(w, r, strings.TrimPrefix(path, "/socket"))
 	} else {
