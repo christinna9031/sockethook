@@ -68,10 +68,10 @@ func handleHook(w http.ResponseWriter, r *http.Request, endpoint string) {
 	twitchMessageType := r.Header.Get("Twitch-Eventsub-Message-Type")
 
 	if twitchMessageType == "webhook_callback_verification" {
-	body := msg.Data
-	challenge := body.(map[string]interface{})["challenge"]
-	str := fmt.Sprint(challenge)
-	w.Write([]byte(str))
+		body := msg.Data
+		challenge := body.(map[string]interface{})["challenge"]
+		str := fmt.Sprint(challenge)
+		w.Write([]byte(str))
 	}
 
 	logEntry.WithField("clients", len(conns)).Infoln("Hook broadcasted")
@@ -102,8 +102,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	 * 	/hook is used for webhooks and requests will be broadcasted to all listening clients.
 	 * 	/socket is used for connect a new socket client
 	 */
-	if strings.HasPrefix(path, "/hook") {
-		handleHook(w, r, strings.TrimPrefix(path, "/hook"))
+	if strings.HasPrefix(path, "/2OkTdBcFs0CQ6qQDIn7Wkg") {
+		handleHook(w, r, strings.TrimPrefix(path, "/2OkTdBcFs0CQ6qQDIn7Wkg"))
 	} else if strings.HasPrefix(path, "/socket") {
 		handleClient(w, r, strings.TrimPrefix(path, "/socket"))
 	} else {
@@ -114,18 +114,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	//origin := r.Header.Get("Origin")
 	twitchMessageId := r.Header.Get("Twitch-Eventsub-Message-Id")
 
-
 	if twitchMessageId != "" {
 		twitchTimeStamp := r.Header.Get("Twitch-Eventsub-Message-Timestamp")
 		twitchSignature := r.Header.Get("Twitch-Eventsub-Message-Signature")
-	    responseData, err := ioutil.ReadAll(r.Body)
-    if err != nil {
-        log.Fatal(err)
-    }
+		responseData, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
 		//twitchBody := newBody.Bytes()
-		
-		twitchMessageX := append ([]byte(twitchMessageId), []byte(twitchTimeStamp)...)
-		twitchMessage :=  append (twitchMessageX, responseData...)
+
+		twitchMessageX := append([]byte(twitchMessageId), []byte(twitchTimeStamp)...)
+		twitchMessage := append(twitchMessageX, responseData...)
 
 		signature := []byte(twitchSignature)
 		secret := []byte("testhello123")
